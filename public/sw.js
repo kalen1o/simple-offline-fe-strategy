@@ -2,7 +2,7 @@ const CACHE_NAME = 'offline-video-v1';
 const STATIC_CACHE_NAME = 'static-v1';
 const VIDEO_CACHE_NAME = 'videos-v1';
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', (_event) => {
   // No pre-caching - routes are cached on-demand when accessed
   self.skipWaiting();
 });
@@ -12,11 +12,12 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE_NAME && 
+          if (cacheName !== STATIC_CACHE_NAME &&
               cacheName !== VIDEO_CACHE_NAME &&
               cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
+          return Promise.resolve();
         })
       );
     })
@@ -62,7 +63,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(networkFirst(request, CACHE_NAME));
 });
 
-async function cacheFirst(request, cacheName) {
+async function _cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
 
@@ -73,11 +74,11 @@ async function cacheFirst(request, cacheName) {
   try {
     const networkResponse = await fetch(request);
     // Only cache complete responses (status 200), not partial (206)
-    if (networkResponse && networkResponse.ok && networkResponse.status === 200) {
+    if (networkResponse?.ok && networkResponse.status === 200) {
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
-  } catch (error) {
+  } catch (_error) {
     // Return a simple offline message
     return new Response('Offline - Asset not available', { status: 503 });
   }
@@ -97,12 +98,12 @@ async function cacheFirstHtml(request, cacheName) {
     const networkResponse = await fetch(request);
 
     // Cache successful responses for future offline use
-    if (networkResponse && networkResponse.ok && networkResponse.status === 200) {
+    if (networkResponse?.ok && networkResponse.status === 200) {
       cache.put(request, networkResponse.clone());
     }
 
     return networkResponse;
-  } catch (error) {
+  } catch (_error) {
     // Network failed - return offline fallback HTML
     return new Response(
       `<!DOCTYPE html>
@@ -145,11 +146,11 @@ async function networkFirst(request, cacheName) {
   try {
     const networkResponse = await fetch(request);
     // Cache successful responses for future offline use
-    if (networkResponse && networkResponse.ok && networkResponse.status === 200) {
+    if (networkResponse?.ok && networkResponse.status === 200) {
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
-  } catch (error) {
+  } catch (_error) {
     // Network failed (offline) - return cached version if available
     if (cachedResponse) {
       return cachedResponse;
@@ -207,12 +208,12 @@ async function cacheVideoForOffline(url) {
     const cache = await caches.open(VIDEO_CACHE_NAME);
     // Fetch the video without range headers to get the complete file
     const response = await fetch(url, { cache: 'no-cache' });
-    if (response && response.ok && response.status === 200) {
+    if (response?.ok && response?.status === 200) {
       await cache.put(url, response.clone());
       return true;
     }
     return false;
-  } catch (error) {
+  } catch (_error) {
     console.error('Failed to cache video:', error);
     return false;
   }
@@ -223,7 +224,7 @@ async function removeVideoFromCache(url) {
     const cache = await caches.open(VIDEO_CACHE_NAME);
     const deleted = await cache.delete(url);
     return deleted;
-  } catch (error) {
+  } catch (_error) {
     console.error('Failed to remove video from cache:', error);
     return false;
   }
@@ -234,7 +235,7 @@ async function getCachedVideos() {
     const cache = await caches.open(VIDEO_CACHE_NAME);
     const keys = await cache.keys();
     return keys.map(request => request.url);
-  } catch (error) {
+  } catch (_error) {
     console.error('Failed to get cached videos:', error);
     return [];
   }

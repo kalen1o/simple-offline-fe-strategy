@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Settings, Palette, HardDrive, Bell, Shield } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
@@ -10,14 +10,14 @@ export default function SettingsPage() {
   const [cachedVideoCount, setCachedVideoCount] = useState(0);
   const [isClearingCache, setIsClearingCache] = useState(false);
 
-  useEffect(() => {
-    loadCacheInfo();
-  }, []);
-
-  const loadCacheInfo = async () => {
+  const loadCacheInfo = useCallback(async () => {
     const cachedVideos = await getCachedVideos();
     setCachedVideoCount(cachedVideos.length);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadCacheInfo();
+  }, [loadCacheInfo]);
 
   const clearAllCache = async () => {
     if (!confirm('Are you sure you want to clear all cached videos? This will make them unavailable offline.')) {
@@ -73,6 +73,7 @@ export default function SettingsPage() {
                       </p>
                     </div>
                     <button
+                      type="button"
                       onClick={clearAllCache}
                       disabled={cachedVideoCount === 0 || isClearingCache}
                       className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -117,6 +118,7 @@ export default function SettingsPage() {
                       <p className="text-sm text-gray-400">Receive updates about new videos</p>
                     </div>
                     <button
+                      type="button"
                       onClick={() => {
                         if ('Notification' in window && Notification.permission === 'default') {
                           Notification.requestPermission();

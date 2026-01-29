@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { sampleVideos } from '@/data/videos';
 import { storage } from '@/lib/storage';
-import { Favorites } from '@/types/video';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { Heart } from 'lucide-react';
@@ -11,17 +10,17 @@ import VideoCard from '@/components/VideoCard';
 
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [cachedVideoUrls, setCachedVideoUrls] = useState<string[]>([]);
+  const [cachedVideoUrls, _setCachedVideoUrls] = useState<string[]>([]);
   const favoriteVideos = sampleVideos.filter(video => favorites.includes(video.id));
+
+  const loadFavorites = useCallback(() => {
+    const favs = storage.getFavorites();
+    setFavorites(favs.map(f => f.videoId));
+  }, []);
 
   useEffect(() => {
     loadFavorites();
-  }, []);
-
-  const loadFavorites = () => {
-    const favs = storage.getFavorites();
-    setFavorites(favs.map(f => f.videoId));
-  };
+  }, [loadFavorites]);
 
   return (
     <div className="min-h-screen bg-[#0f0f0f]">

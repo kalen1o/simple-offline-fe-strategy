@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+build
+dist
+public/videos
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico

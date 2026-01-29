@@ -55,7 +55,8 @@ export default function Sidebar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 mb-8">
           <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
-            <svg className="w-6 h-6 text-white fill-white" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-white fill-white" viewBox="0 0 24 24" role="img">
+              <title>Logo</title>
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>

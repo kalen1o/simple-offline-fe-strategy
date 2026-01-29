@@ -17,10 +17,10 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isFullscreen, _setIsFullscreen] = useState(false);
   const [isCaching, setIsCaching] = useState(false);
   const [isCached, setIsCached] = useState(false);
-  
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -68,6 +68,14 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
       const rect = progressBarRef.current.getBoundingClientRect();
       const percent = (e.clientX - rect.left) / rect.width;
       videoRef.current.currentTime = percent * duration;
+    }
+  };
+
+  const handleProgressKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'ArrowLeft' && videoRef.current) {
+      videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 5);
+    } else if (e.key === 'ArrowRight' && videoRef.current) {
+      videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 5);
     }
   };
 
@@ -130,13 +138,16 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onEnded={() => setIsPlaying(false)}
-        />
+        >
+          <track kind="captions" />
+        </video>
 
         {/* Overlay controls */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4">
-          
+
           {/* Center play button */}
           <button
+            type="button"
             onClick={togglePlay}
             className="self-center mt-auto mb-20"
           >
@@ -149,8 +160,14 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
           <div className="space-y-2">
             {/* Progress bar */}
             <div
+              role="slider"
+              tabIndex={0}
+              aria-valuenow={currentTime}
+              aria-valuemin={0}
+              aria-valuemax={duration}
               ref={progressBarRef}
               onClick={handleProgressClick}
+              onKeyDown={handleProgressKeyDown}
               className="w-full h-1 bg-white/30 rounded-full cursor-pointer group/bar"
             >
               <div
@@ -165,6 +182,7 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
               <div className="flex items-center gap-3">
                 {/* Play/Pause */}
                 <button
+                  type="button"
                   onClick={togglePlay}
                   className="text-white hover:text-red-500 transition-colors"
                 >
@@ -174,6 +192,7 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
                 {/* Volume */}
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={toggleMute}
                     className="text-white hover:text-red-500 transition-colors"
                   >
@@ -199,6 +218,7 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
               <div className="flex items-center gap-3">
                 {/* Cache for offline */}
                 <button
+                  type="button"
                   onClick={handleCacheForOffline}
                   disabled={isCaching || isCached}
                   className="text-white hover:text-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
@@ -217,6 +237,7 @@ export default function VideoPlayer({ videoUrl, title, videoId }: VideoPlayerPro
 
                 {/* Fullscreen */}
                 <button
+                  type="button"
                   onClick={toggleFullscreen}
                   className="text-white hover:text-red-500 transition-colors"
                 >

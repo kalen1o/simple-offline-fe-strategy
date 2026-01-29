@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Menu, Bell, User } from 'lucide-react';
+import { Search, Menu, Bell } from 'lucide-react';
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,7 +17,7 @@ export default function Header() {
     <header className="fixed top-0 right-0 left-0 md:left-64 bg-[#0f0f0f] border-b border-[#303030] z-50">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Mobile menu button */}
-        <button className="md:hidden text-white">
+        <button type="button" className="md:hidden text-white">
           <Menu className="w-6 h-6" />
         </button>
 
@@ -42,10 +42,10 @@ export default function Header() {
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
-          <button className="text-gray-400 hover:text-white transition-colors hidden sm:block">
+          <button type="button" className="text-gray-400 hover:text-white transition-colors hidden sm:block">
             <Bell className="w-6 h-6" />
           </button>
-          <button className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+          <button type="button" className="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
             U
           </button>
         </div>

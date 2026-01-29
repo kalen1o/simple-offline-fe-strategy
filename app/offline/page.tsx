@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { sampleVideos } from '@/data/videos';
 import { getCachedVideos } from '@/lib/service-worker';
 import { Download, WifiOff, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
@@ -15,12 +15,19 @@ export default function OfflinePage() {
 
   const cachedVideos = sampleVideos.filter(video => cachedVideoUrls.includes(video.videoUrl));
 
+  const loadCachedVideos = useCallback(async () => {
+    setIsCheckingCache(true);
+    const urls = await getCachedVideos();
+    setCachedVideoUrls(urls);
+    setIsCheckingCache(false);
+  }, []);
+
   useEffect(() => {
     // Check online status
     setIsOnline(navigator.onLine);
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
-    
+
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
@@ -31,14 +38,7 @@ export default function OfflinePage() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
-
-  const loadCachedVideos = async () => {
-    setIsCheckingCache(true);
-    const urls = await getCachedVideos();
-    setCachedVideoUrls(urls);
-    setIsCheckingCache(false);
-  };
+  }, [loadCachedVideos]);
 
   const storageSize = cachedVideoUrls.length * 50; // Approximate 50MB per video
 
@@ -108,18 +108,16 @@ export default function OfflinePage() {
 
             {/* Video grid */}
             {!isCheckingCache && cachedVideos.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {cachedVideos.map((video) => (
-                    <VideoCard
-                      key={video.id}
-                      video={video}
-                      showCacheStatus={true}
-                      isCached={true}
-                    />
-                  ))}
-                </div>
-              </>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {cachedVideos.map((video) => (
+                  <VideoCard
+                    key={video.id}
+                    video={video}
+                    showCacheStatus={true}
+                    isCached={true}
+                  />
+                ))}
+              </div>
             ) : !isCheckingCache && cachedVideos.length === 0 ? (
               <div className="text-center py-20">
                 <Download className="w-16 h-16 text-gray-600 mx-auto mb-4" />

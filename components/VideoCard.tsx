@@ -1,6 +1,6 @@
 'use client';
 
-import { Video } from '@/types/video';
+import type { Video } from '@/types/video';
 import Link from 'next/link';
 import { Clock, Eye, Play } from 'lucide-react';
 
@@ -14,8 +14,8 @@ interface VideoCardProps {
 
 export default function VideoCard({
   video,
-  onFavorite,
-  isFavorite: isFav,
+  onFavorite: _onFavorite,
+  isFavorite: _isFav,
   showCacheStatus = false,
   isCached = false
 }: VideoCardProps) {
@@ -38,7 +38,8 @@ export default function VideoCard({
           {/* Cached indicator */}
           {showCacheStatus && isCached && (
             <div className="absolute top-2 right-2 bg-green-600 px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img">
+                <title>Cached indicator</title>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               Offline

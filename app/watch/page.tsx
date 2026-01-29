@@ -8,7 +8,7 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { storage } from '@/lib/storage';
 import { Heart, Share2, Clock } from 'lucide-react';
-import { Video } from '@/types/video';
+import type { Video } from '@/types/video';
 
 export default function WatchPage() {
   const searchParams = useSearchParams();
@@ -66,11 +66,12 @@ export default function WatchPage() {
                 {/* Action buttons */}
                 <div className="flex items-center gap-3 py-3 border-b border-[#303030]">
                   <button
+                    type="button"
                     onClick={toggleFavorite}
                     className={`
                       flex items-center gap-2 px-4 py-2 rounded-full transition-all
-                      ${isFavorite 
-                        ? 'bg-gray-700 text-white' 
+                      ${isFavorite
+                        ? 'bg-gray-700 text-white'
                         : 'bg-[#1f1f1f] text-white hover:bg-[#2a2a2a]'
                       }
                     `}
@@ -79,7 +80,7 @@ export default function WatchPage() {
                     <span>{isFavorite ? 'Saved' : 'Save'}</span>
                   </button>
 
-                  <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#1f1f1f] text-white hover:bg-[#2a2a2a] transition-all">
+                  <button type="button" className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#1f1f1f] text-white hover:bg-[#2a2a2a] transition-all">
                     <Share2 className="w-5 h-5" />
                     <span>Share</span>
                   </button>
@@ -129,7 +130,8 @@ export default function WatchPage() {
                       <div className="relative flex-shrink-0 w-40 aspect-video bg-[#1f1f1f] rounded-lg overflow-hidden">
                         <div className="absolute inset-0 flex items-center justify-center">
                           <div className="w-8 h-8 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <svg className="w-4 h-4 text-white fill-white ml-0.5" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 text-white fill-white ml-0.5" viewBox="0 0 24 24" role="img">
+                              <title>Play icon</title>
                               <path d="M8 5v14l11-7z" />
                             </svg>
                           </div>

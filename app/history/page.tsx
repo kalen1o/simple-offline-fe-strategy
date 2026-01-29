@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { sampleVideos } from '@/data/videos';
 import { storage } from '@/lib/storage';
-import { UserHistory } from '@/types/video';
+import type { UserHistory } from '@/types/video';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { Clock, Trash2 } from 'lucide-react';
@@ -11,20 +11,20 @@ import VideoCard from '@/components/VideoCard';
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<UserHistory[]>([]);
-  const [cachedVideoUrls, setCachedVideoUrls] = useState<string[]>([]);
-  
+  const [cachedVideoUrls, _setCachedVideoUrls] = useState<string[]>([]);
+
   const historyVideos = history
     .map(entry => sampleVideos.find(v => v.id === entry.videoId))
     .filter((video): video is Exclude<typeof video, undefined> => video !== undefined);
 
-  useEffect(() => {
-    loadHistory();
-  }, []);
-
-  const loadHistory = () => {
+  const loadHistory = useCallback(() => {
     const historyData = storage.getHistory();
     setHistory(historyData);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadHistory();
+  }, [loadHistory]);
 
   const clearHistory = () => {
     if (confirm('Are you sure you want to clear your watch history?')) {
@@ -68,6 +68,7 @@ export default function HistoryPage() {
               
               {history.length > 0 && (
                 <button
+                  type="button"
                   onClick={clearHistory}
                   className="flex items-center gap-2 px-4 py-2 bg-[#1f1f1f] text-white rounded-lg hover:bg-[#2a2a2a] transition-colors"
                 >

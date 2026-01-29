@@ -1,4 +1,4 @@
-import { UserHistory, Favorites } from '@/types/video';
+import type { UserHistory, Favorites } from '@/types/video';
 
 const STORAGE_KEYS = {
     HISTORY: 'video-history',

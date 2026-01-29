@@ -1,11 +1,8 @@
 // Generate app icons using Canvas
 // Run this in Node.js with: node public/generate-icons.js
 
-const fs = require('fs');
-const path = require('path');
-
 // Create a simple SVG icon as a base64 string
-const createSVGIcon = (size) => {
+const _createSVGIcon = (size) => {
   const svg = `
     <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -15,7 +12,7 @@ const createSVGIcon = (size) => {
         </linearGradient>
       </defs>
       <rect width="${size}" height="${size}" fill="url(#grad)"/>
-      <polygon points="${size * 0.35},${size * 0.35} ${size * 0.65},${size / 2} ${size * 0.35},${size * 0.65}" 
+      <polygon points="${size * 0.35},${size * 0.35} ${size * 0.65},${size / 2} ${size * 0.35},${size * 0.65}"
                fill="white"/>
     </svg>
   `;
@@ -24,10 +21,10 @@ const createSVGIcon = (size) => {
 
 // Save icon as PNG using a simple approach
 const generateIcons = () => {
-  console.log('To generate icons, please use the browser-based generator:');
+  console.log('To generate icons, please use browser-based generator:');
   console.log('1. Open http://localhost:3000/icons.html in your browser');
   console.log('2. Click on each icon to download it');
-  console.log('3. Save all icons to the public/ directory');
+  console.log('3. Save all icons to public/ directory');
   console.log('');
   console.log('Required icon sizes:');
   const sizes = [72, 96, 128, 144, 152, 192, 384, 512];

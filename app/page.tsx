@@ -6,7 +6,6 @@ import VideoCard from '@/components/VideoCard';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { getCachedVideos } from '@/lib/service-worker';
-import { Video } from '@/types/video';
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -32,6 +31,7 @@ export default function Home() {
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
             {categories.map((category) => (
               <button
+                type="button"
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={`

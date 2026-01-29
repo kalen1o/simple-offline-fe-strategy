@@ -12,6 +12,7 @@ export default function Preview() {
           <div className="flex gap-3 flex-wrap">
             {categories.map((category) => (
               <button
+                type="button"
                 key={category}
                 className="px-4 py-2 bg-[#1f1f1f] text-white rounded-lg hover:bg-[#2a2a2a] transition-colors"
               >
@@ -28,7 +29,8 @@ export default function Preview() {
               <div key={video.id} className="bg-[#1f1f1f] rounded-lg overflow-hidden">
                 <div className="relative aspect-video bg-[#2a2a2a] flex items-center justify-center">
                   <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white fill-white ml-1" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 text-white fill-white ml-1" viewBox="0 0 24 24" role="img">
+                      <title>Play icon</title>
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
