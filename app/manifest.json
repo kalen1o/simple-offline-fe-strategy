@@ -1,0 +1,9 @@
+{
+    "name": "Offline Video App",
+    "short_name": "OfflineVideo",
+    "description": "YouTube-like video player that works offline",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f0f0f",
+    "theme_color": "#000000"
+}

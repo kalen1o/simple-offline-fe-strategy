@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate App Icons</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #1a1a1a;
+      color: white;
+    }
+    .icon-preview {
+      display: inline-block;
+      margin: 10px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #444;
+      background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+    }
+  </style>
+</head>
+<body>
+  <h1>Offline Video App Icons</h1>
+  <p>Right-click and save each icon:</p>
+  
+  <div id="icons"></div>
+
+  <script>
+    function createIcon(size, filename) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#ff0000');
+      gradient.addColorStop(1, '#cc0000');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+      
+      // Play button
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      const padding = size * 0.35;
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(size - padding, size / 2);
+      ctx.lineTo(padding, size - padding);
+      ctx.closePath();
+      ctx.fill();
+      
+      const div = document.createElement('div');
+      div.className = 'icon-preview';
+      div.innerHTML = `<canvas></canvas><br><strong>${filename}</strong>`;
+      div.querySelector('canvas').width = size;
+      div.querySelector('canvas').height = size;
+      const iconCtx = div.querySelector('canvas').getContext('2d');
+      
+      // Draw on preview
+      const iconGradient = iconCtx.createLinearGradient(0, 0, size, size);
+      iconGradient.addColorStop(0, '#ff0000');
+      iconGradient.addColorStop(1, '#cc0000');
+      iconCtx.fillStyle = iconGradient;
+      iconCtx.fillRect(0, 0, size, size);
+      
+      iconCtx.fillStyle = 'white';
+      iconCtx.beginPath();
+      const iconPadding = size * 0.35;
+      iconCtx.moveTo(iconPadding, iconPadding);
+      iconCtx.lineTo(size - iconPadding, size / 2);
+      iconCtx.lineTo(iconPadding, size - iconPadding);
+      iconCtx.closePath();
+      iconCtx.fill();
+      
+      div.querySelector('canvas').addEventListener('click', function() {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = this.toDataURL('image/png');
+        link.click();
+      });
+      div.querySelector('canvas').style.cursor = 'pointer';
+      div.querySelector('canvas').title = 'Click to download';
+      
+      document.getElementById('icons').appendChild(div);
+    }
+
+    const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+    sizes.forEach(size => {
+      createIcon(size, `icon-${size}x${size}.png`);
+    });
+  </script>
+</body>
+</html>
